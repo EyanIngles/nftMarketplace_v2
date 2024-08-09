@@ -7,22 +7,43 @@
 const hre = require("hardhat");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+// deploy contracts
+  const MARKETPLACE = await hre.ethers.getContractFactory("Marketplace_v2");
+  const marketplace = await MARKETPLACE.deploy()
 
-  const lockedAmount = hre.ethers.parseEther("0.001");
+  const marketplaceAddress = await marketplace.getAddress();
 
-  const lock = await hre.ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
 
-  await lock.waitForDeployment();
+  console.log(`uploaded marketplace contract too: ${marketplaceAddress}`)
 
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  );
+
+  const VAULT = await hre.ethers.getContractFactory("MarketplaceVault");
+  const vault = await VAULT.deploy(marketplace.getAddress());
+
+  const vaultAddress = await vault.getAddress();
+
+
+  console.log(`uploaded vault contract too: ${vaultAddress}`)
+
+  const name = 'mockNFT'
+  const symbol = 'NFT'
+  const cost = ethers.parseUnits('0.025', 'ether')
+  const maxSupply = 25
+  const baseURI = 'ipfs://QmQ2jnDYecFhrf3asENjyjZRX1pZSsNWG3qHzmNDvXa9qg/'
+  const allowMintingOn = 0 //(Date.now() + 60000).toString().slice(0,10) // slice to take off the miliseconds
+
+
+  const NFT = await hre.ethers.getContractFactory("MockERC721");
+  const nft = await NFT.deploy(name, symbol, cost, maxSupply, allowMintingOn, baseURI) // mock up for testing;
+
+  const costNFT = await nft.cost();
+  console.log(`nft cost is:: ${costNFT}`)
+
+  const nftAddress = await nft.getAddress();
+
+  console.log(`uploaded nft contract too: ${nftAddress}`)
+
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere

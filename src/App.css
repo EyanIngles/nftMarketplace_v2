@@ -168,3 +168,58 @@ button:hover {
 .btn-lg:hover {
   background-color: #555;
 }
+
+/* Parent container should have relative positioning */
+.parent-container {
+  position: relative;
+}
+
+/* Styles for the account info box */
+.account-info {
+  background: linear-gradient(135deg, #ffeb3b96 0%, #01bc87 150%);
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center content vertically */
+  text-align: center;
+  border-radius: 15px;
+  padding: 15px;
+  position: absolute; /* Absolute positioning to stick to top-right corner */
+  top: 10px; /* Adjust as needed */
+  right: 10px; /* Adjust as needed */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  transition: transform 1s ease;
+}
+
+/* Responsive adjustments */
+@media only screen and (max-width: 768px) {
+  .account-info {
+    margin: 5px; /* Adjust margin for smaller screens */
+    padding: 10px; /* Adjust padding for smaller screens */
+    font-size: x-small; /* Adjust font size for smaller screens */
+  }
+  .account-info p {
+    margin: 0; /* Remove margin for paragraph inside */
+  }
+}
+
+.account-info:hover {
+  transform: scale(1.05);
+}
+
+.account-info p {
+  margin-left: 0; /* Reset margin for paragraph inside */
+  margin-top:10%;
+  font-weight: 700; /* Bold text */
+}
+
+.blockie {
+  /* Add any specific styles for blockie here */
+  margin-bottom:100%;
+}
+.connect-button {
+  position: absolute; /* Absolute positioning to stick to top-right corner */
+  top: 10px; /* Adjust as needed */
+  right: 10px; /* Adjust as needed */
+}

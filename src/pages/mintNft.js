@@ -1,25 +1,43 @@
-import React from 'react'
+import {React, useState} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { loadMintNft } from '../handlers/interactions'
 
-const mintNft = () => {
+const MintNft = () => {
+  const [minting, setMinting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [amount, setAmount] = useState(0);
+
+  const provider = useSelector((state) => state.provider.provider)
+  const chainId = useSelector((state) => state.provider.network)
+  const nft = useSelector((state) => state.nft.ncontract)
+  let mintAmount
+
+  const dispatch = useDispatch();
+
+  const mintHandler = async () => {
+    setMinting(true);
+    console.log("minthandler activated")
+    setAmount(1)
+
+    const mintNft = await loadMintNft(provider, nft, chainId, amount, dispatch);
+    setMinting(false);
+  }
   return (
-    <div><section id="mint-nfts" className="section">
+    <div>
     <h2>Mint NFTs</h2>
     <div className="mint-container">
-      <form>
-        <label htmlFor="nft-name">NFT Name:</label>
-        <input type="text" id="nft-name" name="nft-name" required />
-
-        <label htmlFor="nft-description">NFT Description:</label>
-        <textarea id="nft-description" name="nft-description" required></textarea>
-
-        <label htmlFor="nft-image">NFT Image:</label>
-        <input type="file" id="nft-image" name="nft-image" required />
-
-        <button type="submit">Mint NFT</button>
-      </form>
+      <p>only allowed to mint one nft at a time and a maximum of ....</p>
+      {minting && nft? (
+        <>
+        <p>minting</p>
+        </>
+      ) : (
+        <>
+        <button onClick={mintHandler}>Mint NFT</button>
+        </>)}
     </div>
-  </section></div>
+</div>
   )
 }
 
-export default mintNft
+export default MintNft

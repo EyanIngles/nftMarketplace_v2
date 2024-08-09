@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Nav from 'react-bootstrap/Nav';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import Connect from "./handlers/connectWallet"
 import Homepage from './pages/homepage';
 import BuyNft from './pages/buyNftPage';
 import MintNft from './pages/mintNft';
@@ -16,6 +17,9 @@ function App() {
 
   return (
     <Router>
+      <div>
+    <Connect></Connect>
+    </div>
         <div className="sideTab-container">
           <Button variant="primary" onClick={handleShow}>
             |||
