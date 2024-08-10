@@ -39,10 +39,20 @@ async function main() {
   const costNFT = await nft.cost();
   console.log(`nft cost is:: ${costNFT}`)
 
+  const NFT1 = await hre.ethers.getContractFactory("MockERC721");
+  const nft1 = await NFT1.deploy(name, symbol, cost, maxSupply, allowMintingOn, baseURI) // mock up for testing;
+
+  const costNFT1 = await nft1.cost();
+  console.log(`nft cost is:: ${costNFT1}`)
+
+
   const nftAddress = await nft.getAddress();
 
   console.log(`uploaded nft contract too: ${nftAddress}`)
 
+  const nftAddress1 = await nft1.getAddress();
+
+  console.log(`uploaded nft1 contract too: ${nftAddress1}`)
 
 }
 

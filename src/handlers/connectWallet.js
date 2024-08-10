@@ -33,8 +33,6 @@ let provider, chainId
       const marketplace = await loadMarketplace(provider, chainId, dispatch)
       const nft = await loadNft(provider, chainId, dispatch)
       const vault = await loadVault(provider, chainId, dispatch)
-      const nftCost = await loadNftMintCost(provider,nft, chainId, dispatch);
-      const nftBalance = await loadNftBalance(provider, marketplace, chainId, dispatch)
 
 
       window.ethereum.on('accountsChanged', async () => {

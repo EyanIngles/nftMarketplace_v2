@@ -66,17 +66,44 @@ export const loadNft = async (provider, chainId, dispatch) => {
 }
 
 export const loadNftMintCost = async (provider, nft, chainId, dispatch) => {
-    nft = await loadNft(provider, chainId, dispatch);
-    const formatCost = await nft.cost(); // Get the BigNumber directly
-    //console.log("Raw cost from contract:", formatCost); // Check the value
-    const nftCost = ethers.formatEther(formatCost); // Format it to Ether
-    //console.log("Formatted cost in ETH:", nftCost);
+    // Ensure nft is passed correctly and not reloaded
+    if (!nft) {
+        nft = await loadNft(provider, chainId, dispatch);
+    }
 
-    dispatch(setNftMintCost(nftCost));
+    try {
+        const formatCost = await nft.cost(); // Get the BigNumber directly
+        console.log("Raw cost from contract:", formatCost.toString()); // Log raw cost
+        const nftCost = ethers.formatEther(formatCost); // Format to Ether
+        console.log("Formatted cost in ETH:", nftCost); // Log formatted cost
 
-    return nftCost;
-}
+        dispatch(setNftMintCost(nftCost));
+        return nftCost;
+    } catch (error) {
+        console.error("Error fetching NFT cost:", error);
+        return "0.0";
+    }
+};
 
+export const loadNftBalance = async (provider, marketplace, chainId, dispatch) => {
+    if (!marketplace) {
+        marketplace = await loadMarketplace(provider, chainId, dispatch);
+    }
+
+    try {
+        const account = await loadAccount(dispatch);
+        const nftBalanceBIG = await marketplace.checkBalanceOfNfts(account);
+
+
+        console.log("NFT Balance:", nftBalanceBIG); // Log the NFT balance
+
+        dispatch(setNftBalance(nftBalanceBIG));
+        return nftBalanceBIG;
+    } catch (error) {
+        console.error("Error fetching NFT balance:", error);
+        return "0";
+    }
+};
 
 export const loadMintNft = async (provider, nft, chainId, amount, dispatch) => {
     const signer = await provider.getSigner()
@@ -93,16 +120,6 @@ export const loadMintNft = async (provider, nft, chainId, amount, dispatch) => {
     dispatch(setMintNft(result))
 
     return result
-}
-export const loadNftBalance = async (provider, marketplace, chainId, dispatch) => {
-    marketplace = await loadMarketplace(provider, chainId, dispatch);
-    const account = await loadAccount(dispatch)
-    const nftBalanceBIG = await marketplace.checkBalanceOfNfts(account);
-    const nftBalance = ethers.formatUnits(nftBalanceBIG, 0);
-
-    dispatch(setNftBalance(nftBalance));
-
-    return nftBalance;
 }
 export const loadImportNftContract = async (provider, marketplace, chainId, address, dispatch) => {
     const signer = await provider.getSigner()
