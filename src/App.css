@@ -223,3 +223,28 @@ button:hover {
   top: 10px; /* Adjust as needed */
   right: 10px; /* Adjust as needed */
 }
+
+.main-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0% ; /* Ensure no padding when the sidebar is closed */
+  transition: padding-left 0.3s ease; /* Smooth transition when opening sidebar */
+}
+
+
+
+.mint-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.carousel-container {
+  margin-top: 40px;
+}
+
+.carousel img {
+  max-height: 400px;
+  object-fit: contain;
+}

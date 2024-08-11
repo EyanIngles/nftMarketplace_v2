@@ -33,6 +33,9 @@ async function main() {
 
     console.log("contract imported to marketplace", result)
 
+    // import nft too and have 2 address mint an nft each
+    
+
   console.log(`Finished! \n`)
 }
 
