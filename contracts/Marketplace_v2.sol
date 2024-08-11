@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.25;
 
 import {ERC721Enumerable} from "node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
@@ -21,20 +22,23 @@ contract Marketplace_v2 is Ownable {
         return totalBalance;
     }
 
-    function getTokenIds(address _nftOwner) public view returns (uint256[] memory) {
+    function getTokenIdsAndContract(address _nftOwner) public view returns (uint256[] memory, address[] memory) {
         uint256 totalBalance = checkBalanceOfNfts(_nftOwner);
-        uint256[] memory tokenIds = new uint256[](totalBalance);
+        uint256[] memory tokenIds = new uint256[](totalBalance); //length is going to be no more than the total balance of the address called.
+        address[] memory contractAddressesArray = new address[](totalBalance);
         uint256 counter = 0;
 
-        for (uint256 i = 0; i < contractAddresses.length; i++) {
+            for (uint256 i = 0; i < contractAddresses.length; i++) {
             uint256 balance = contractAddresses[i].balanceOf(_nftOwner);
             for (uint256 j = 0; j < balance; j++) {
                 tokenIds[counter] = contractAddresses[i].tokenOfOwnerByIndex(_nftOwner, j);
+                contractAddressesArray[counter] = address(contractAddresses[i]); // Store the address of the contract
                 counter++;
             }
         }
-        return tokenIds;
-    }
+        return (tokenIds, contractAddressesArray);
+}
+
 
     function getNFTName(ERC721Enumerable _contractAddress) public view returns (string memory) {
         string memory name = _contractAddress.name();

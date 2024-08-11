@@ -1,5 +1,6 @@
 import { setAccount, setNetwork, setProvider } from "../store/providerStore";
-import { setMarketContract, setNftBalance, setImportNftContract } from "../store/marketplaceStore";
+import { setMarketContract, setNftBalance,
+    setImportNftContract, setGetTokenIds } from "../store/marketplaceStore";
 import { setVaultContract } from "../store/vaultStore";
 import { setNftContract, setMintNft, setNftMintCost } from "../store/nftStore";
 import { ethers } from "ethers";
@@ -93,12 +94,16 @@ export const loadNftBalance = async (provider, marketplace, chainId, dispatch) =
     try {
         const account = await loadAccount(dispatch);
         const nftBalanceBIG = await marketplace.checkBalanceOfNfts(account);
+        const nftBalance = ethers.formatUnits(nftBalanceBIG, 0)
+
+        await loadGetTokenIds(provider, marketplace, chainId, dispatch)
 
 
-        console.log("NFT Balance:", nftBalanceBIG); // Log the NFT balance
 
-        dispatch(setNftBalance(nftBalanceBIG));
-        return nftBalanceBIG;
+        console.log("NFT Balance:", nftBalance); // Log the NFT balance
+
+        dispatch(setNftBalance(nftBalance));
+        return nftBalance;
     } catch (error) {
         console.error("Error fetching NFT balance:", error);
         return "0";
@@ -107,7 +112,6 @@ export const loadNftBalance = async (provider, marketplace, chainId, dispatch) =
 
 export const loadMintNft = async (provider, nft, chainId, amount, dispatch) => {
     const signer = await provider.getSigner()
-    nft = await loadNft(provider, chainId, dispatch)
     //retrieve the cost of the nft collection
     const cost = "25000000000000000" //unable to get costs, something wrong with the mock nft contract.
     amount = 1;
@@ -115,9 +119,12 @@ export const loadMintNft = async (provider, nft, chainId, amount, dispatch) => {
     const transaction = await nft.connect(signer).mint(amount, { value: cost });
     let result = await transaction.wait()
     const marketplace = await loadMarketplace(provider, chainId, dispatch)
-    await loadNftBalance(provider, marketplace, chainId, dispatch)
 
     dispatch(setMintNft(result))
+
+    // after function loading
+    await loadNftBalance(provider, marketplace, chainId, dispatch)
+    await loadGetTokenIds(provider, marketplace, chainId, dispatch)
 
     return result
 }
@@ -127,8 +134,44 @@ export const loadImportNftContract = async (provider, marketplace, chainId, addr
 
     const transaction = await marketplace.connect(signer).importNftContract(address)
     const result = await transaction.wait()
+
+    await loadNftBalance(provider, marketplace, chainId, dispatch)
+    await loadGetTokenIds(provider, marketplace, chainId, dispatch)
+
     dispatch(setImportNftContract(result))
 
     return result;
 }
+
+export const loadGetTokenIds = async (provider, marketplace, chainId, dispatch) => {
+    try {
+        const account = await loadAccount(dispatch);
+        marketplace = await loadMarketplace(provider, chainId, dispatch);
+
+        // Call the smart contract function to get the array of token IDs and corresponding contract addresses
+        const [tokenIds, contractAddress] = await marketplace.getTokenIdsAndContract(account);
+
+        // Convert each BigNumber in the tokenIds array to a human-readable format
+        const formattedTokenIds = tokenIds.map(tokenId => ethers.formatUnits(tokenId, 0));
+
+        // Create an array of objects that pairs token IDs with their corresponding contract addresses
+        const result = formattedTokenIds.map((tokenId) => ({
+            tokenId: tokenId,
+            contractAddress: contractAddress,
+        }));
+
+        // Dispatch the array of formatted token IDs and contract addresses to the store
+        dispatch(setGetTokenIds(result));
+
+        // Return the array of formatted token IDs and contract addresses
+        return result;
+    } catch (error) {
+        console.error("Error fetching token IDs and contract addresses:", error);
+        return [];
+    }
+}
+
+
+
+
 

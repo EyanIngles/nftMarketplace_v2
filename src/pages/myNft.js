@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import {Button, Form} from 'react-bootstrap'
+import { Button, Form, Col, Card } from 'react-bootstrap'
 import { loadImportNftContract } from "../handlers/interactions";
 import { ethers } from "ethers"
 
@@ -32,30 +32,32 @@ const MyNft = () => {
   return (
     <div>
       <section id="my-nfts" className="section">
-    <h2>My NFTs</h2>
-    <Button onClick={myNFThandler}>Load My Nft's</Button>
-    <div className="nft-container">
-      {/* Add your NFT items here */}
-      <div className="nft-card">
-        <img src="nft1.jpg" alt="NFT 1" />
-        <div className="nft-info">
-          <p>NFT 1 Description</p>
+        <h2>My NFTs</h2>
+        <Button onClick={myNFThandler}>Load My Nft's</Button>
+        <div className="nft-container">
+
+
+
+          <div className="nft-card">
+            <img src="nft1.jpg" alt="NFT 1" />
+            <div className="nft-info">
+              <p>NFT 1 Description</p>
+            </div>
+          </div>
+          {/* More NFT items */}
         </div>
-      </div>
-      {/* More NFT items */}
-    </div>
-  </section>
+      </section>
       <div>
         <Form>
-      <Form.Group className="mb-3" controlId="formNFTAddress">
-        <Form.Label>Can not see all your NFT's? <br/>Please import the contract here.</Form.Label>
-        <Form.Control type="text" placeholder="NFT contract"
-        value={nftContract} onChange={inputHandler}/>
-      </Form.Group>
-        <Button variant="primary" type="button" onClick={importHandler}> Submit</Button>
+          <Form.Group className="mb-3" controlId="formNFTAddress">
+            <Form.Label>Can not see all your NFT's? <br />Please import the contract here.</Form.Label>
+            <Form.Control type="text" placeholder="NFT contract"
+              value={nftContract} onChange={inputHandler} />
+          </Form.Group>
+          <Button variant="primary" type="button" onClick={importHandler}> Submit</Button>
         </Form>
       </div>
-  </div>
+    </div>
   )
 }
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ethers } from 'ethers';
 import { loadAccount, loadNetwork, loadProvider, loadMarketplace,
-loadNft, loadVault, loadNftMintCost, loadNftBalance} from '../handlers/interactions';
+loadNft, loadVault, loadNftMintCost, loadNftBalance, loadGetTokenIds} from '../handlers/interactions';
 import { Button } from 'react-bootstrap';
 import Blockies from 'react-blockies';
 
@@ -33,7 +33,9 @@ let provider, chainId
       const marketplace = await loadMarketplace(provider, chainId, dispatch)
       const nft = await loadNft(provider, chainId, dispatch)
       const vault = await loadVault(provider, chainId, dispatch)
-
+      const nftCost = await loadNftMintCost(provider, nft, chainId, dispatch)
+      const nftBalance = await loadNftBalance(provider, marketplace, chainId, dispatch)
+      await loadGetTokenIds(provider, marketplace, chainId, dispatch);
 
       window.ethereum.on('accountsChanged', async () => {
         loadBlockchain();

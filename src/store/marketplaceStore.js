@@ -6,6 +6,7 @@ export const marketplace = createSlice({
         mContract: null,
         checkNftBalance: 0,
         importNftContract: null,
+        getTokenIds: [],
 
     },
     reducers: {
@@ -18,9 +19,12 @@ export const marketplace = createSlice({
         setImportNftContract: (state, action) => {
             state.importNftContract = action.payload
         },
+        setGetTokenIds: (state, action) => {
+            state.getTokenIds = action.payload
+        },
     }
 })
 
-export const { setMarketContract, setNftBalance, setImportNftContract } = marketplace.actions;
+export const { setMarketContract, setNftBalance, setImportNftContract, setGetTokenIds } = marketplace.actions;
 
 export default marketplace.reducer;
