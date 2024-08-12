@@ -1,5 +1,5 @@
 import React from 'react';
-import '../buyNftPage.css'; // Assuming you'll add your styles here
+import '../buyNftPage.css';
 
 const BuyNftPage = () => {
   const nfts = [

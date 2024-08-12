@@ -23,7 +23,28 @@
     transition: transform 0.3s ease-in-out;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
-
+  .mynft-card {
+    background: linear-gradient(29deg,#e5eeeec5, #6a05d67b, #055df6a0); /* Blue to purple gradient */
+    padding: 0;
+    margin-bottom: 10%;
+    color: white;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.5s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  .myNft-div {
+    padding-top:8%;
+  }
+  .nft-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows cards to wrap to the next line if the container is too small */
+    gap: 20px; /* Adds space between the cards */
+    justify-content: space-around; /* Distributes the cards evenly */
+  }
+  .mynft-card:hover {
+    transform: translateY(-10px); /* Lift the card slightly on hover */
+  }
   .nft-card:hover {
     transform: translateY(-10px); /* Lift the card slightly on hover */
   }

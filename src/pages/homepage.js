@@ -12,8 +12,9 @@ const Homepage = () => {
   const projectHandler = () => {
     
   }
+
   return (
-    <Container>
+    <Container className='my-5'>
       {/* Hero Section */}
       <Row className="my-5 text-center">
         <Col>

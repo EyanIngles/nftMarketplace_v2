@@ -16,25 +16,41 @@ async function main() {
     console.log(`Fetching accounts and network details... \n`)
     const accounts = await ethers.getSigners()
     const deployer = accounts[0]
+    const user = accounts[1]
 
 
     //Fetch network
     const { chainId } =  await ethers.provider.getNetwork()
     console.log(`Fetching token and transferring to accounts \n`)
-
+    // importing nft collection 1
     const nft = await ethers.getContractAt('MockERC721', config[chainId].nft.address)
     console.log(`nft data fetched: ${await nft.getAddress()} \n`)
+    // importing nft collection 2
+    const nft1 = await ethers.getContractAt('MockERC721', "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9")
+    console.log(`nft data fetched: ${await nft1.getAddress()} \n`)
 
     const marketplace = await ethers.getContractAt('Marketplace_v2', config[chainId].marketplace.address)
     console.log(`marketplace data fetched: ${await marketplace.getAddress()} \n`)
 
-    const tx = await marketplace.connect(deployer).importNftContract(nft)
-    const result = await tx.wait()
-
+    let tx = await marketplace.connect(deployer).importNftContract(nft)
+    let result = await tx.wait()
     console.log("contract imported to marketplace", result)
 
-    // import nft too and have 2 address mint an nft each
-    
+
+    tx = await marketplace.connect(deployer).importNftContract(nft1)
+    result = await tx.wait()
+    console.log("contract imported to marketplace", result)
+
+
+    //tx = await marketplace.connect(user).importNftContract(nft)
+    //result = await tx.wait()
+    //console.log("contract imported to marketplace", result)
+//
+    //tx = await marketplace.connect(user).importNftContract(nft1)
+    //result = await tx.wait()
+    //console.log("contract imported to marketplace", result)
+
+
 
   console.log(`Finished! \n`)
 }

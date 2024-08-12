@@ -149,15 +149,12 @@ export const loadGetTokenIds = async (provider, marketplace, chainId, dispatch) 
         marketplace = await loadMarketplace(provider, chainId, dispatch);
 
         // Call the smart contract function to get the array of token IDs and corresponding contract addresses
-        const [tokenIds, contractAddress] = await marketplace.getTokenIdsAndContract(account);
-
-        // Convert each BigNumber in the tokenIds array to a human-readable format
-        const formattedTokenIds = tokenIds.map(tokenId => ethers.formatUnits(tokenId, 0));
+        const [tokenIds, contractAddresses] = await marketplace.getTokenIdsAndContract(account);
 
         // Create an array of objects that pairs token IDs with their corresponding contract addresses
-        const result = formattedTokenIds.map((tokenId) => ({
-            tokenId: tokenId,
-            contractAddress: contractAddress,
+        const result = tokenIds.map((tokenId, index) => ({
+            tokenId: ethers.formatUnits(tokenId, 0),
+            contractAddress: contractAddresses[index],
         }));
 
         // Dispatch the array of formatted token IDs and contract addresses to the store
@@ -169,7 +166,7 @@ export const loadGetTokenIds = async (provider, marketplace, chainId, dispatch) 
         console.error("Error fetching token IDs and contract addresses:", error);
         return [];
     }
-}
+};
 
 
 

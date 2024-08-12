@@ -9,7 +9,7 @@ contract Marketplace_v2 is Ownable {
 
     constructor() Ownable(msg.sender) {}
 
-    function importNftContract(ERC721Enumerable _contractAddress) public onlyOwner {
+    function importNftContract(ERC721Enumerable _contractAddress) public onlyOwner { // need to add a check to ensure that there isnt duplicates.
         require(address(_contractAddress) != address(0), "Address cannot be a zero address.");
         contractAddresses.push(_contractAddress);
     }
@@ -30,14 +30,15 @@ contract Marketplace_v2 is Ownable {
 
             for (uint256 i = 0; i < contractAddresses.length; i++) {
             uint256 balance = contractAddresses[i].balanceOf(_nftOwner);
+            address nftAddress = address(contractAddresses[i]);
             for (uint256 j = 0; j < balance; j++) {
                 tokenIds[counter] = contractAddresses[i].tokenOfOwnerByIndex(_nftOwner, j);
-                contractAddressesArray[counter] = address(contractAddresses[i]); // Store the address of the contract
+                contractAddressesArray[counter] = nftAddress; // Store the address of the contract
                 counter++;
             }
         }
         return (tokenIds, contractAddressesArray);
-}
+    }
 
 
     function getNFTName(ERC721Enumerable _contractAddress) public view returns (string memory) {
