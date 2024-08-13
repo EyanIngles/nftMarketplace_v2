@@ -1,7 +1,7 @@
 import { setAccount, setNetwork, setProvider } from "../store/providerStore";
 import { setMarketContract, setNftBalance,
     setImportNftContract, setGetTokenIds } from "../store/marketplaceStore";
-import { setVaultContract } from "../store/vaultStore";
+import { setVaultContract, setListNft } from "../store/vaultStore";
 import { setNftContract, setMintNft, setNftMintCost } from "../store/nftStore";
 import { ethers } from "ethers";
 //import abis
@@ -167,6 +167,30 @@ export const loadGetTokenIds = async (provider, marketplace, chainId, dispatch) 
         return [];
     }
 };
+export const loadListNft = async (provider, vault, chainId, contractAddress, formattedPrice, tokenId, dispatch) => {
+    const signer = await provider.getSigner()
+    const account = await loadAccount(dispatch)
+    const marketplace = await loadMarketplace(provider, chainId, dispatch);
+    vault = await loadVault(provider, chainId, dispatch);
+
+    const contract = new ethers.Contract(contractAddress, [
+        "function approve(address to, uint256 tokenId)"
+      ], provider);
+
+    const tx = await contract.connect(signer).approve(vault.getAddress(), tokenId)
+    const txResult = await tx.wait()
+
+    const transaction = await vault.connect(signer).listNft(contract, tokenId, formattedPrice, account )
+    //_NFT, uint256 _tokenId, uint256 _price, address _seller
+    const result = await transaction.wait()
+
+    await loadNftBalance(provider, marketplace, chainId, dispatch)
+    await loadGetTokenIds(provider, marketplace, chainId, dispatch)
+
+    dispatch(setListNft(result))
+
+    return result;
+}
 
 
 

@@ -35,7 +35,7 @@ contract MarketplaceVault is Ownable {
     }
 
     function listNft(IERC721 _NFT, uint256 _tokenId, uint256 _price, address _seller) external {
-        require(msg.sender == marketplaceContract, "You are not authorised");
+        //require(msg.sender == marketplaceContract, "You are not authorised");
 
         // Transfer NFT to the contract
         _NFT.transferFrom(_seller, address(this), _tokenId);
